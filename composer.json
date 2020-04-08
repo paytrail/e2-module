@@ -11,7 +11,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.2"
     },
     "autoload": {
         "psr-4": {
@@ -19,6 +19,11 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.1"
+        "phpunit/phpunit": "^8.0",
+        "phpunit/php-code-coverage": "^7.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-text --coverage-html test-reports/html --coverage-clover test-reports/clover.xml tests --log-junit test-reports/junit.xml"
     }
 }
