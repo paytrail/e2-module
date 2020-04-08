@@ -22,7 +22,7 @@ class Product
     {
         $product = new Self();
         $product->title = $productData['title'];
-        $product->id = $productData['id'];
+        $product->id = $productData['id'] ?? null;
         $product->unitPrice = $productData['unitPrice'];
         $product->quantity = $productData['quantity'] ?? 1;
         $product->itemType = $productData['itemType'] ?? self::TYPE_NORMAL;

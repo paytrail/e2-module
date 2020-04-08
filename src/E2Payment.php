@@ -18,10 +18,12 @@ class E2Payment
     private $merchantId;
     private $merchantSecret;
 
+    private $orderNUmber;
+
     private $products = [];
     private $amount;
 
-    private $paymentData = [];
+    private $paymentData;
 
     public function __construct(string $merchantId, string $merchantSecret)
     {
@@ -39,7 +41,10 @@ class E2Payment
 
     private function getDefaultUrls(): void
     {
-        $rootUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        $rootUrl = "{$protocol}://{$host}{$requestUri}";
 
         $this->paymentData['URL_SUCCESS'] = $rootUrl . 'success';
         $this->paymentData['URL_CANCEL'] = $rootUrl . 'cancel';
@@ -49,10 +54,11 @@ class E2Payment
     public function createPayment(string $orderNUmber, array $paymentData = []): void
     {
         $this->paymentData = array_merge($paymentData, $this->paymentData);
+        $this->orderNUmber = $orderNUmber;
 
         $this->paymentData['ORDER_NUMBER'] = $orderNUmber;
 
-        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->paymentData['ORDER_NUMBER'];
+        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
         $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
         $this->paymentData['REFERENCE_NUMBER'] = $this->paymentData['REFERENCE_NUMBER'] ?? null;
         $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
@@ -109,13 +115,22 @@ class E2Payment
         }
     }
 
-    public function getPaymentForm(string $formId = Form::DEFAULT_FORM_ID): string
+    public function getPaymentForm(string $buttonText = 'Pay here', string $formId = Form::DEFAULT_FORM_ID): string
     {
-        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
-
         $this->validatePaymentData();
 
-        return Form::create($this->paymentData, $formId);
+        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
+
+        return Form::createWithoutWidget($this->paymentData, $buttonText, $formId);
+    }
+
+    public function getPaymentWidget(string $buttonText = 'Pay here', string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
+    {
+        $this->validatePaymentData();
+
+        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();        
+
+        return Form::create($this->paymentData, $buttonText, $formId, $widgetUrl);
     }
 
     private function calculateAuthCode(): string
@@ -132,9 +147,12 @@ class E2Payment
 
     private function validatePaymentData(): void
     {
+        if (!$this->orderNUmber) {
+            throw new \Exception('No payment created.');
+        }
+        
         if (!$this->amount && empty($this->products)) {
-            throw new \Exception('Either amount of atleast one product must be added.');
+            throw new \Exception('Either amount of at least one product must be added.');
         }
     }
-
 }
