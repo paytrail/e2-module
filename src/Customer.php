@@ -25,12 +25,12 @@ class Customer
         $customer = new Self();
         $customer->firstName = $customerData['firstName'];
         $customer->lastName = $customerData['lastName'];
-        $customer->email = $customerData['email'];
-        $customer->streetAddress = $customerData['streetAddress'];
-        $customer->postalCode = $customerData['postalCode'];
-        $customer->town = $customerData['town'];
+        $customer->email = $customerData['email'] ?? null;
+        $customer->streetAddress = $customerData['streetAddress'] ?? null;
+        $customer->postalCode = $customerData['postalCode'] ?? null;
+        $customer->town = $customerData['town'] ?? null;
         $customer->countryCode = $customerData['countryCode'] ?? 'FI';
-        $customer->phone = $customerData['phone'];
+        $customer->phone = $customerData['phone'] ?? null;
         $customer->company = $customerData['company'] ?? null;
 
         return $customer;
