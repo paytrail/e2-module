@@ -23,8 +23,12 @@ class E2Payment
 
     private $paymentData = [];
 
+    private $validator;
+
     public function __construct(string $merchantId, string $merchantSecret)
     {
+        $this->validator = new Validator($merchantSecret);
+
         $this->merchantId = $merchantId;
         $this->merchantSecret = $merchantSecret;
 
@@ -43,7 +47,7 @@ class E2Payment
 
         $this->paymentData['URL_SUCCESS'] = $rootUrl . 'success';
         $this->paymentData['URL_CANCEL'] = $rootUrl . 'cancel';
-        $this->paymentData['URL_NOTIFY'] =$rootUrl . 'notify';
+        $this->paymentData['URL_NOTIFY'] = $rootUrl . 'notify';
     }
 
     public function createPayment(string $orderNUmber, array $paymentData = []): void
@@ -52,7 +56,11 @@ class E2Payment
 
         $this->paymentData['ORDER_NUMBER'] = $orderNUmber;
 
-        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->paymentData['ORDER_NUMBER'];
+        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
+        $this->paymentData['MSG_SETTLEMENT_PAYER'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
+        $this->paymentData['MSG_SETTLEMENT_MERCHANT'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
+        $this->paymentData['MSG_UI_PAYMENT_METHOD'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
+
         $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
         $this->paymentData['REFERENCE_NUMBER'] = $this->paymentData['REFERENCE_NUMBER'] ?? null;
         $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
@@ -60,17 +68,14 @@ class E2Payment
 
     public function addCustomer(Customer $customer)
     {
-        $this->paymentData['PAYER_PERSON_FIRSTNAME'] = $customer->firstName;
-        $this->paymentData['PAYER_PERSON_LASTNAME'] = $customer->lastName;
-        $this->paymentData['PAYER_PERSON_EMAIL'] = $customer->email;
-        $this->paymentData['PAYER_PERSON_ADDR_STREET'] = $customer->streetAddress;
-        $this->paymentData['PAYER_PERSON_ADDR_POSTAL_CODE'] = $customer->postalCode;
-        $this->paymentData['PAYER_PERSON_ADDR_TOWN'] = $customer->town;
-        $this->paymentData['PAYER_PERSON_ADDR_COUNTRY'] = $customer->countryCode;
-        $this->paymentData['PAYER_PERSON_PHONE'] = $customer->phone;
-        $this->paymentData['PAYER_COMPANY_NAME'] = $customer->company;
+        foreach (get_object_vars($customer) as $key => $value) {
+            if ($value === null) {
+                continue;
+            }
+            $this->paymentData[$key] = $value;
 
-        $this->paymentData['PARAMS_IN'] .= ',PAYER_PERSON_PHONE,PAYER_PERSON_EMAIL,PAYER_PERSON_FIRSTNAME,PAYER_PERSON_LASTNAME,PAYER_COMPANY_NAME,PAYER_PERSON_ADDR_STREET,PAYER_PERSON_ADDR_POSTAL_CODE,PAYER_PERSON_ADDR_TOWN,PAYER_PERSON_ADDR_COUNTRY';
+            $this->paymentData['PARAMS_IN'] .= ',' . $key;
+        }
     }
 
     public function addAmount(float $amount): void
@@ -97,15 +102,15 @@ class E2Payment
         $this->paymentData['VAT_IS_INCLUDED'] = $this->paymentData['VAT_IS_INCLUDED'] ?? 1;
 
         foreach ($this->products as $index => $product) {
-            $this->paymentData["ITEM_TITLE[{$index}]"] = $product->title;
-            $this->paymentData["ITEM_ID[{$index}]"] = $product->id;
-            $this->paymentData["ITEM_QUANTITY[{$index}]"] = $product->quantity;
-            $this->paymentData["ITEM_UNIT_PRICE[{$index}]"] = $product->unitPrice;
-            $this->paymentData["ITEM_VAT_PERCENT[{$index}]"] = $product->vat;
-            $this->paymentData["ITEM_DISCOUNT_PERCENT[{$index}]"] = $product->discount;
-            $this->paymentData["ITEM_TYPE[{$index}]"] = $product->itemType;
+            foreach (get_object_vars($product) as $key => $value) {
+                if ($value === null) {
+                    continue;
+                }
+                $key .= "[{$index}]";
+                $this->paymentData[$key] = $value;
 
-            $this->paymentData['PARAMS_IN'] .= ",ITEM_TITLE[{$index}],ITEM_ID[{$index}],ITEM_QUANTITY[{$index}],ITEM_UNIT_PRICE[{$index}],ITEM_VAT_PERCENT[{$index}],ITEM_DISCOUNT_PERCENT[{$index}],ITEM_TYPE[{$index}]";
+                $this->paymentData['PARAMS_IN'] .= ',' . $key;
+            }
         }
     }
 
@@ -113,9 +118,16 @@ class E2Payment
     {
         $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
 
+        return Form::createPaymentForm($this->paymentData, $buttonText, $formId);
+    }
+
+    public function getPaymentWidget(string $buttonText = 'Pay here', string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
+    {
         $this->validatePaymentData();
 
-        return Form::create($this->paymentData, $formId);
+        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
+
+        return Form::createPaymentWidget($this->paymentData, $buttonText, $formId, $widgetUrl);
     }
 
     private function calculateAuthCode(): string
@@ -123,10 +135,10 @@ class E2Payment
         $hashData = [$this->merchantSecret];
         $hashParams = explode(',', $this->paymentData['PARAMS_IN']);
 
-        foreach($hashParams as $parameter) {
+        foreach ($hashParams as $parameter) {
             $hashData[] = $this->paymentData[$parameter];
         }
-        
+
         return strToUpper(hash('sha256', implode('|', $hashData)));
     }
 
@@ -137,4 +149,13 @@ class E2Payment
         }
     }
 
+    public function paymentIsValid(array $returnParameters): bool
+    {
+        return $this->validator->paymentIsValid($returnParameters);
+    }
+
+    public function getErrors(): array
+    {
+        return $this->validator->getErrors();
+    }
 }
