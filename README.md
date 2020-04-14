@@ -10,7 +10,7 @@ composer require Paytrail/e2-module
 
 ## Documentation
 
-Paytrail official documentation can be found in [https://docs.paytrail.com/en](https://docs.paytrail.com/en)
+Paytrail official documentation can be found in [https://docs.paytrail.com](https://docs.paytrail.com)
 
 ## Examples
 
@@ -29,6 +29,7 @@ echo $e2Payment->getPaymentForm();
 ### Payment with customer, production information and custom return urls
 
 Include customer information, discounted product and custom return urls.
+Payment, customer and product properties can be found from [documentation](https://docs.paytrail.com)
 
 ```php
 use Paytrail\E2Module\E2Payment;
@@ -38,38 +39,39 @@ use Paytrail\E2Module\Customer;
 $e2Payment = new E2Payment($merchantNumber, $merchantSecret);
 
 $customer = Customer::create([
-    'firstName' => 'Test',
-    'lastName' => 'Customer',
-    'email' => 'customer.email@nomail.com',
-    'streetAddress' => 'Test street 1',
-    'postalCode' => '100200',
-    'town' => 'Helsinki',
-    'countryCode' => 'FI',
-    'phone' => '040123456' ,
+    'PAYER_PERSON_FIRSTNAME' => 'Test',
+    'PAYER_PERSON_LASTNAME' => 'Customer',
+    'PAYER_PERSON_EMAIL' => 'customer.email@nomail.com',
+    'PAYER_PERSON_ADDR_STREET' => 'Test street 1',
+    'PAYER_PERSON_ADDR_POSTAL_CODE' => '100200',
+    'PAYER_PERSON_ADDR_TOWN' => 'Helsinki',
+    'PAYER_PERSON_ADDR_COUNTRY' => 'FI',
+    'PAYER_PERSON_PHONE' => '040123456' ,
 ]);
 $e2Payment->addCustomer($customer);
 
 $paymentData = [
-    'URL_SUCCESS' => 'https://url/to/shop/successUrl';
-    'URL_CANCEL' => 'https://url/to/shop/cancelUrl';
-    'URL_NOTIFY' => 'https://url/to/shop/notifyUrl';
+    'URL_SUCCESS' => 'https://url/to/shop/successUrl',
+    'URL_CANCEL' => 'https://url/to/shop/cancelUrl',
+    'URL_NOTIFY' => 'https://url/to/shop/notifyUrl',
 ];
+
 $e2Payment->createPayment($orderNumber, $paymentData);
 
 $product = product::create([
-    'title' => 'Test Product',
-    'id' => '1234',
-    'unitPrice' => 50,
-    'quantity' => 2,
-    'discount' => 10,
+    'ITEM_TITLE' => 'Test Product',
+    'ITEM_ID' => '1234',
+    'ITEM_UNIT_PRICE' => 50,
+    'ITEM_QUANTITY' => 2,
+    'ITEM_DISCOUNT_PERCENT' => 10,
 ]);
 $shipping = product::create([
-    'title' => 'Shipping',
-    'id' => '001',
-    'unitPrice' => 5,
-    'type' => Product::TYPE_SHIPMENT_COST,
+    'ITEM_TITLE' => 'Shipping',
+    'ITEM_ID' => '001',
+    'ITEM_UNIT_PRICE' => 5,
+    'ITEM_TYPE' => Product::TYPE_SHIPMENT_COST,
 ]);
 $e2Payment->addProducts([$product, $shipping]);
 
-echo $e2Payment->getPaymentForm();
+echo $e2Payment->getPaymentWidget();
 ```

@@ -19,7 +19,6 @@ Class E2PaymentTest Extends TestCase
         'AUTHCODE',
     ];
 
-
     private $e2Payment;
     private $product;
     private $customer;
@@ -28,15 +27,15 @@ Class E2PaymentTest Extends TestCase
     {
         parent::setUp();
 
-        $this->e2Payment = new E2Payment('123', 'asd');
+        $this->e2Payment = new E2Payment('13466', '6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ');
         $this->product = Product::create([
-            'title' => 'Foo',
-            'id' => '001',
-            'unitPrice' => 2,
+            'ITEM_TITLE' => 'Foo',
+            'ITEM_ID' => '001',
+            'ITEM_UNIT_PRICE' => 2,
         ]);
         $this->customer = Customer::create([
-            'firstName' => 'Foo',
-            'lastName' => 'Bar',
+            'PAYER_PERSON_FIRSTNAME' => 'Foo',
+            'PAYER_PERSON_LASTNAME' => 'Bar',
         ]);
     }
 
@@ -119,5 +118,56 @@ Class E2PaymentTest Extends TestCase
         $this->assertStringContainsString('<input name="ITEM_TITLE[0]"', $formData);
 
         $this->assertStringContainsString($dummyUrl, $formData);
+    }
+
+    public function testPaymentCanBeConfirmed()
+    {
+        $urlData = [
+            'ORDER_NUMBER' => 'Order-123',
+            'PAYMENT_ID' => '109056237731',
+            'AMOUNT' => '95.00',
+            'CURRENCY' => 'EUR',
+            'PAYMENT_METHOD' => '1',
+            'TIMESTAMP' => '1586411733',
+            'STATUS' => 'PAID',
+            'RETURN_AUTHCODE' => '1CBCBC693DB07D0F0528C681F8C4B9FD974371588CDA1219D49911EB5D1CA53D',
+        ];
+
+        $this->assertTrue($this->e2Payment->paymentIsValid($urlData));
+    }
+
+    public function testExceptionIsThrownWhenMissingReturnParameter()
+    {
+        $urlData = [
+            'ORDER_NUMBER' => 'Order-123',
+            'PAYMENT_ID' => '109056237731',
+            'AMOUNT' => '95.00',
+            'PAYMENT_METHOD' => '1',
+            'TIMESTAMP' => '1586411733',
+            'STATUS' => 'PAID',
+            'RETURN_AUTHCODE' => 'CA07B387D484F20E370EF4A4B7007588F0C5A3090F682CBCE440A97CFA75CCC2',
+        ];
+
+        $this->assertFalse($this->e2Payment->paymentIsValid($urlData));
+        $this->assertCount(1, $this->e2Payment->getErrors());
+        $this->assertStringContainsString('CURRENCY', $this->e2Payment->getErrors()[0]);
+    }
+
+    public function testExceptionIsThrownOnInvalidReturnAuthCode()
+    {
+        $urlData = [
+            'ORDER_NUMBER' => 'Order-123',
+            'PAYMENT_ID' => '109056237731',
+            'AMOUNT' => '95.00',
+            'CURRENCY' => 'EUR',
+            'PAYMENT_METHOD' => '1',
+            'TIMESTAMP' => '1586411733',
+            'STATUS' => 'PAID',
+            'RETURN_AUTHCODE' => '111111111111111',
+        ];
+
+        $this->assertFalse($this->e2Payment->paymentIsValid($urlData));
+        $this->assertCount(1, $this->e2Payment->getErrors());
+        $this->assertStringContainsString('RETURN_AUTHCODE', $this->e2Payment->getErrors()[0]);
     }
 }
