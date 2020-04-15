@@ -20,6 +20,5 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    # Uncomment lines below when tests have been implemented.
-    # - name: Run test suite
-    #   run: composer test
+    - name: Run test suite
+      run: composer test
