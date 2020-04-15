@@ -7,7 +7,7 @@ namespace Paytrail\E2Module;
 /**
  * Class for creating payment form for payment page.
  *
- * @package E2-Module
+ * @package e2-module
  * @author Paytrail <tech@paytrail.com>
  */
 class Form
