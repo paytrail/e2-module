@@ -7,7 +7,7 @@ namespace Paytrail\E2Module;
 /**
  * Validator class for validating outgoing and incoming payment data.
  *
- * @package E2-Module
+ * @package e2-module
  * @author Paytrail <tech@paytrail.com>
  */
 class Validator
@@ -32,7 +32,7 @@ class Validator
         if (!isset($paymentData['ORDER_NUMBER'])) {
             throw new \Exception('No payment created.');
         }
-        
+
         if (!isset($paymentData['AMOUNT']) && !isset($paymentData['ITEM_TITLE[0]'])) {
             throw new \Exception('Either amount of at least one product must be added.');
         }
@@ -74,6 +74,7 @@ class Validator
     {
         $returnParameters[] = $this->merchantSecret;
         unset($returnParameters['RETURN_AUTHCODE']);
+
         return strToUpper(hash('sha256', implode('|', $returnParameters)));
     }
 
