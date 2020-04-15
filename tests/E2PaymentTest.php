@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests;
+
 use Paytrail\E2Module\Customer;
 use Paytrail\E2Module\E2Payment;
 use Paytrail\E2Module\Product;
@@ -41,27 +43,27 @@ class E2PaymentTest extends TestCase
 
     public function testExceptionIsThrownWithoutOrderNumber()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->e2Payment->getPaymentForm();
     }
 
     public function testExceptionIsThrownWithoutProductsOrPrice()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->e2Payment->createPayment('1234');
         $this->e2Payment->getPaymentForm();
     }
 
     public function testExceptionIsThrownWhenAddingProductWhenAmountIsSet()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->e2Payment->addAmount(10);
         $this->e2Payment->addProducts([$this->product]);
     }
 
     public function testExceptionIsThrownWhenAddingAmountAndHasProducts()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->e2Payment->addProducts([$this->product]);
         $this->e2Payment->addAmount(10);
     }

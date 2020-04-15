@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests;
+
 use Paytrail\E2Module\Validator;
 use PHPUnit\Framework\TestCase;
 
