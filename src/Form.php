@@ -7,7 +7,7 @@ namespace Paytrail\E2Module;
 /**
  * Class for creating payment form for payment page.
  *
- * @package E2-Module
+ * @package e2-module
  * @author Paytrail <tech@paytrail.com>
  */
 class Form
@@ -26,7 +26,7 @@ class Form
      */
     public static function createPaymentWidget(array $paymentData, string $buttonText, string $formId, ?string $widgetUrl): string
     {
-        $formData = '<form action="'.E2Payment::PAYMENT_URL.'" id="'.$formId.'">';
+        $formData = '<form action="' . E2Payment::PAYMENT_URL . '" id="' . $formId . '">';
         foreach ($paymentData as $key => $value) {
             $formData .= "<input name=\"{$key}\" type=\"hidden\" value=\"{$value}\">\n";
         }
@@ -49,7 +49,7 @@ class Form
      */
     public static function createPaymentForm(array $paymentData, string $buttonText, string $formId): string
     {
-        $formData = '<form action="'.E2Payment::PAYMENT_URL.'" id="'.$formId.'">';
+        $formData = '<form action="' . E2Payment::PAYMENT_URL . '" id="' . $formId . '">';
         foreach ($paymentData as $key => $value) {
             $formData .= "<input name=\"{$key}\" type=\"hidden\" value=\"{$value}\">\n";
         }

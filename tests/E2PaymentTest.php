@@ -7,7 +7,7 @@ use Paytrail\E2Module\E2Payment;
 use Paytrail\E2Module\Product;
 use PHPUnit\Framework\TestCase;
 
-Class E2PaymentTest Extends TestCase
+class E2PaymentTest extends TestCase
 {
     const REQUIRED_PAYMENT_DATA = [
         'MERCHANT_ID',
@@ -76,7 +76,7 @@ Class E2PaymentTest Extends TestCase
 
         $this->assertNotEmpty($formData);
 
-        foreach(self::REQUIRED_PAYMENT_DATA as $requiredData) {
+        foreach (self::REQUIRED_PAYMENT_DATA as $requiredData) {
             $this->assertStringContainsString($requiredData, $formData);
         }
 
@@ -97,7 +97,7 @@ Class E2PaymentTest Extends TestCase
 
         $this->assertNotEmpty($formData);
 
-        foreach(self::REQUIRED_PAYMENT_DATA as $requiredData) {
+        foreach (self::REQUIRED_PAYMENT_DATA as $requiredData) {
             $this->assertStringContainsString($requiredData, $formData);
         }
 
@@ -116,7 +116,7 @@ Class E2PaymentTest Extends TestCase
 
         $this->assertNotEmpty($formData);
 
-        foreach(self::REQUIRED_PAYMENT_DATA as $requiredData) {
+        foreach (self::REQUIRED_PAYMENT_DATA as $requiredData) {
             $this->assertStringContainsString($requiredData, $formData);
         }
 

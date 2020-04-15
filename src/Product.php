@@ -7,7 +7,7 @@ namespace Paytrail\E2Module;
 /**
  * Product class for holding product details for payment.
  *
- * @package E2-Module
+ * @package e2-module
  * @author Paytrail <tech@paytrail.com>
  */
 class Product
@@ -34,7 +34,7 @@ class Product
         $product->ITEM_VAT_PERCENT = $productData['ITEM_VAT_PERCENT'] ?? 24;
         $product->ITEM_DISCOUNT_PERCENT = $productData['ITEM_DISCOUNT_PERCENT'] ?? null;
         $product->ITEM_ID = $productData['ITEM_ID'] ?? null;
-        
+
 
         return $product;
     }

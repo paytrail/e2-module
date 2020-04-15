@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Paytrail\E2Module\Validator;
 use PHPUnit\Framework\TestCase;
 
-Class ValidatorTest Extends TestCase
+class ValidatorTest extends TestCase
 {
     private $validator;
 
