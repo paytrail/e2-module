@@ -7,7 +7,7 @@ namespace Paytrail\E2Module;
 /**
  * Payment class for Paytrail E2 payment interface.
  *
- * @package E2-Module
+ * @package e2-module
  * @author Paytrail <tech@paytrail.com>
  */
 class E2Payment
