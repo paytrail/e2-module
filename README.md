@@ -124,7 +124,6 @@ $errorReasons = $e2Payment->getErrors();
 This return array of all error reasons in return authcode validation.
 
 To get status of payment, paid or not.
-
 ```php
 $isPaid = $e2Payment->isPaid($_GET);
 ```
