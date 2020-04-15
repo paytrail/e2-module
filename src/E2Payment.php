@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Paytrail\E2Module;
 
+/**
+ * Payment class for Paytrail E2 payment interface.
+ *
+ * @package E2-Module
+ * @author Paytrail <tech@paytrail.com>
+ */
 class E2Payment
 {
     const PAYMENT_URL = 'https://payment.paytrail.com/e2';
 
     const DEFAULT_ALGORITHM = 1;
-
     const DEFAULT_LOCALE = 'fi_FI';
 
     const PARAMS_IN = 'MERCHANT_ID,URL_SUCCESS,URL_CANCEL,ORDER_NUMBER,PARAMS_IN,PARAMS_OUT,MSG_UI_MERCHANT_PANEL,URL_NOTIFY,LOCALE,CURRENCY,REFERENCE_NUMBER,PAYMENT_METHODS,ALG';
@@ -17,14 +22,11 @@ class E2Payment
 
     private $merchantId;
     private $merchantSecret;
-
+    
     private $orderNUmber;
-
     private $products = [];
     private $amount;
-
     private $paymentData;
-
     private $validator;
 
     public function __construct(string $merchantId, string $merchantSecret)
@@ -43,6 +45,11 @@ class E2Payment
         $this->getDefaultUrls();
     }
 
+    /**
+     * Get default return urls by appending current url with success, cancel or notify suffix.
+     *
+     * @return void
+     */
     private function getDefaultUrls(): void
     {
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
@@ -55,6 +62,13 @@ class E2Payment
         $this->paymentData['URL_NOTIFY'] =$rootUrl . 'notify';
     }
 
+    /**
+     * Create payment.
+     *
+     * @param string $orderNUmber
+     * @param array $paymentData
+     * @return void
+     */
     public function createPayment(string $orderNUmber, array $paymentData = []): void
     {
         $this->paymentData = array_merge($paymentData, $this->paymentData);
@@ -72,6 +86,12 @@ class E2Payment
         $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
     }
 
+    /**
+     * Add customer to payment.
+     *
+     * @param Customer $customer
+     * @return void
+     */
     public function addCustomer(Customer $customer)
     {
         foreach (get_object_vars($customer) as $key => $value) {
@@ -84,6 +104,12 @@ class E2Payment
         }
     }
 
+    /**
+     * Add payment total amount.
+     *
+     * @param float $amount
+     * @return void
+     */
     public function addAmount(float $amount): void
     {
         if (!empty($this->products)) {
@@ -96,6 +122,12 @@ class E2Payment
         $this->paymentData['PARAMS_IN'] .= ',AMOUNT';
     }
 
+    /**
+     * Add product details to payment.
+     *
+     * @param array $products
+     * @return void
+     */
     public function addProducts(array $products): void
     {
         if ($this->amount) {
@@ -120,54 +152,79 @@ class E2Payment
         }
     }
 
+    /**
+     * Get payment form with button to proceed Paytrail payment page.
+     *
+     * @param string $buttonText
+     * @param string $formId
+     * @return string
+     */
     public function getPaymentForm(string $buttonText = 'Pay here', string $formId = Form::DEFAULT_FORM_ID): string
     {
-        $this->validatePaymentData();
+        $this->validator->validatePaymentData($this->paymentData);
 
         $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
 
         return Form::createPaymentForm($this->paymentData, $buttonText, $formId);
     }
 
+    /**
+     * Get Paytrail payment widget.
+     *
+     * @param string $buttonText
+     * @param string $formId
+     * @param string|null $widgetUrl
+     * @return string
+     */
     public function getPaymentWidget(string $buttonText = 'Pay here', string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
     {
-        $this->validatePaymentData();
+        $this->validator->validatePaymentData($this->paymentData);
 
-        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();        
+        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
 
         return Form::createPaymentWidget($this->paymentData, $buttonText, $formId, $widgetUrl);
     }
 
+    /**
+     * Calculate payment authcode.
+     *
+     * @return string
+     */
     private function calculateAuthCode(): string
     {
         $hashData = [$this->merchantSecret];
         $hashParams = explode(',', $this->paymentData['PARAMS_IN']);
 
-        foreach($hashParams as $parameter) {
+        foreach ($hashParams as $parameter) {
             $hashData[] = $this->paymentData[$parameter];
         }
         
         return strToUpper(hash('sha256', implode('|', $hashData)));
     }
 
-    private function validatePaymentData(): void
+    /**
+     * Validate return authcode.
+     *
+     * @param array $returnParameters
+     * @return boolean
+     */
+    public function returnAuthcodeIsValid(array $returnParameters): bool
     {
-        if (!$this->orderNUmber) {
-            throw new \Exception('No payment created.');
-        }
-        
-        if (!$this->amount && empty($this->products)) {
-            throw new \Exception('Either amount of at least one product must be added.');
-        }
+        return $this->validator->returnAuthcodeIsValid($returnParameters);
     }
 
-    public function paymentIsValid(array $returnParameters): bool
-    {
-        return $this->validator->paymentIsValid($returnParameters);
-    }
-
+    /**
+     * Get return authcode errors.
+     *
+     * @return array
+     */
     public function getErrors(): array
     {
         return $this->validator->getErrors();
+    }
+
+    public function isPaid(array $returnParameters): bool
+    {
+        return $returnParameters['STATUS'] === 'PAID';
     }
 }
