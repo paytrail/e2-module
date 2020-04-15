@@ -7,7 +7,7 @@ namespace Paytrail\E2Module;
 /**
  * Customer class for holding customer details for payment.
  *
- * @package E2-Module
+ * @package e2-module
  * @author Paytrail <tech@paytrail.com>
  */
 class Customer
