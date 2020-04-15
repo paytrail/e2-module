@@ -7,7 +7,7 @@ namespace Paytrail\E2Module;
 /**
  * Payment class for Paytrail E2 payment interface.
  *
- * @package E2-Module
+ * @package e2-module
  * @author Paytrail <tech@paytrail.com>
  */
 class E2Payment
@@ -22,7 +22,7 @@ class E2Payment
 
     private $merchantId;
     private $merchantSecret;
-    
+
     private $orderNUmber;
     private $products = [];
     private $amount;
@@ -59,7 +59,7 @@ class E2Payment
 
         $this->paymentData['URL_SUCCESS'] = $rootUrl . 'success';
         $this->paymentData['URL_CANCEL'] = $rootUrl . 'cancel';
-        $this->paymentData['URL_NOTIFY'] =$rootUrl . 'notify';
+        $this->paymentData['URL_NOTIFY'] = $rootUrl . 'notify';
     }
 
     /**
@@ -100,7 +100,7 @@ class E2Payment
             }
             $this->paymentData[$key] = $value;
 
-            $this->paymentData['PARAMS_IN'] .= ','.$key;
+            $this->paymentData['PARAMS_IN'] .= ',' . $key;
         }
     }
 
@@ -146,8 +146,8 @@ class E2Payment
                 }
                 $key .= "[{$index}]";
                 $this->paymentData[$key] = $value;
-    
-                $this->paymentData['PARAMS_IN'] .= ','.$key;
+
+                $this->paymentData['PARAMS_IN'] .= ',' . $key;
             }
         }
     }
@@ -198,7 +198,7 @@ class E2Payment
         foreach ($hashParams as $parameter) {
             $hashData[] = $this->paymentData[$parameter];
         }
-        
+
         return strToUpper(hash('sha256', implode('|', $hashData)));
     }
 
