@@ -1,5 +1,5 @@
 {
-    "name": "paytrail/re2-module",
+    "name": "paytrail/e2-module",
     "description": "A PHP package for integrating with Paytrail's E2 interface.",
     "type": "library",
     "license": "MIT",

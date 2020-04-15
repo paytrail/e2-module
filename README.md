@@ -26,9 +26,9 @@ $e2Payment->createPayment($orderNumber);
 echo $e2Payment->getPaymentForm();
 ```
 
-### Payment with customer, production information and custom return urls
+### Payment widget with customer, production information and custom return urls
 
-Include customer information, discounted product and custom return urls.
+Include customer information, discounted product and custom return urls. Get payment widget instead of providing link to payment page.
 Payment, customer and product properties can be found from [documentation](https://docs.paytrail.com)
 
 ```php
@@ -74,4 +74,39 @@ $shipping = product::create([
 $e2Payment->addProducts([$product, $shipping]);
 
 echo $e2Payment->getPaymentWidget();
+```
+
+### Validating completed payment
+
+After returning from payment, whether success or cancelled, validate return authcode. Same validation applies to notify url.
+
+```php
+$isValidPayment = $e2Payment->returnAuthcodeIsValid($_GET);
+```
+
+You can also send return parameters as array insted of using `$_GET` superglobal.
+If return code is not valid, you can get validation errors.
+
+```php
+$errorReasons = $e2Payment->getErrors();
+```
+This return array of all error reasons in return authcode validation.
+
+To get status of payment, paid or not.
+```php
+$isPaid = $e2Payment->isPaid($_GET);
+```
+
+#### Validating payment from notification
+If customer doesn't return back after payment, status can be verified from capturing payment data from notify url.
+Return authcode validation is similar than success and cancelled payment, but you also need determine payment status.
+
+```php
+$isValidPayment = $e2Payment->returnAuthcodeIsValid($_GET);
+if (!$isValidPayment) {
+    // code to handle invalid validation.
+}
+
+$isPaid = $e2Payment->isPaid($_GET);
+// Code to handle paid/cancelled status for order.
 ```
