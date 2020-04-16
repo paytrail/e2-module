@@ -165,8 +165,7 @@ class E2Payment
     public function getPaymentForm(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID): string
     {
         $this->validator->validatePaymentData($this->paymentData);
-
-        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
+        $this->paymentData['AUTHCODE'] = Authcode::calculateAuthCode($this->paymentData, $this->merchant);
 
         return Form::createPaymentForm($this->paymentData, $buttonText, $formId);
     }
@@ -182,27 +181,9 @@ class E2Payment
     public function getPaymentWidget(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
     {
         $this->validator->validatePaymentData($this->paymentData);
-
-        $this->paymentData['AUTHCODE'] = $this->calculateAuthCode();
+        $this->paymentData['AUTHCODE'] = Authcode::calculateAuthCode($this->paymentData, $this->merchant);
 
         return Form::createPaymentWidget($this->paymentData, $buttonText, $formId, $widgetUrl);
-    }
-
-    /**
-     * Calculate payment authcode.
-     *
-     * @return string
-     */
-    private function calculateAuthCode(): string
-    {
-        $hashData = [$this->merchant->secret];
-        $hashParams = explode(',', $this->paymentData['PARAMS_IN']);
-
-        foreach ($hashParams as $parameter) {
-            $hashData[] = $this->paymentData[$parameter];
-        }
-
-        return strToUpper(hash('sha256', implode('|', $hashData)));
     }
 
     /**

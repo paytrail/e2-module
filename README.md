@@ -20,7 +20,7 @@ Paytrail official documentation can be found in [https://docs.paytrail.com](http
 use Paytrail\E2Module\Merchant;
 use Paytrail\E2Module\E2Payment;
 
-$merchant = Merchant::create($merchantNumber, $merchantSecret);
+$merchant = Merchant::create($merchantId, $merchantSecret);
 $e2Payment = new E2Payment($merchant);
 $e2Payment->addAmount($orderAmount);
 $e2Payment->createPayment($orderNumber);
@@ -39,7 +39,7 @@ use Paytrail\E2Module\E2Payment;
 use Paytrail\E2Module\Product;
 use Paytrail\E2Module\Customer;
 
-$merchant = Merchant::create($merchantNumber, $merchantSecret);
+$merchant = Merchant::create($merchantId, $merchantSecret);
 
 $e2Payment = new E2Payment($merchant);
 

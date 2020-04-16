@@ -22,8 +22,9 @@ class Template
      * @param string $templateName
      * @param array $data
      * @return void
+     * @throws TemplateException
      */
-    public static function render(string $templateName, array $data)
+    public static function render(string $templateName, array $data = []): string
     {
         $templateFile = __DIR__ . self::TEMPLATE_PATH . basename($templateName) . '.phtml';
 
