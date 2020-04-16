@@ -3,6 +3,7 @@
     "description": "A PHP package for integrating with Paytrail's E2 interface.",
     "type": "library",
     "license": "MIT",
+    "homepage": "https://www.paytrail.com/",
     "authors": [
         {
             "name": "Paytrail",

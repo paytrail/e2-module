@@ -7,6 +7,8 @@ namespace Tests;
 use Paytrail\E2Module\Customer;
 use Paytrail\E2Module\E2Payment;
 use Paytrail\E2Module\Product;
+use Paytrail\Exceptions\ProductException;
+use Paytrail\Exceptions\ValidationException;
 use PHPUnit\Framework\TestCase;
 
 class E2PaymentTest extends TestCase
@@ -43,27 +45,27 @@ class E2PaymentTest extends TestCase
 
     public function testExceptionIsThrownWithoutOrderNumber()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(ValidationException::class);
         $this->e2Payment->getPaymentForm();
     }
 
     public function testExceptionIsThrownWithoutProductsOrPrice()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(ValidationException::class);
         $this->e2Payment->createPayment('1234');
         $this->e2Payment->getPaymentForm();
     }
 
     public function testExceptionIsThrownWhenAddingProductWhenAmountIsSet()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(ProductException::class);
         $this->e2Payment->addAmount(10);
         $this->e2Payment->addProducts([$this->product]);
     }
 
     public function testExceptionIsThrownWhenAddingAmountAndHasProducts()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(ProductException::class);
         $this->e2Payment->addProducts([$this->product]);
         $this->e2Payment->addAmount(10);
     }

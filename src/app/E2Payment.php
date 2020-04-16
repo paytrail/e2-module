@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Paytrail\E2Module;
 
+use Paytrail\Exceptions\ProductException;
+
 /**
  * Payment class for Paytrail E2 payment interface.
  *
@@ -23,7 +25,7 @@ class E2Payment
     private $merchantId;
     private $merchantSecret;
 
-    private $orderNUmber;
+    private $orderNumber;
     private $products = [];
     private $amount;
     private $paymentData;
@@ -42,7 +44,7 @@ class E2Payment
         $this->paymentData['CURRENCY'] = 'EUR';
         $this->paymentData['ALG'] = self::DEFAULT_ALGORITHM;
 
-        $this->getDefaultUrls();
+        $this->setDefaultUrls();
     }
 
     /**
@@ -50,7 +52,7 @@ class E2Payment
      *
      * @return void
      */
-    private function getDefaultUrls(): void
+    private function setDefaultUrls(): void
     {
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? '';
@@ -69,17 +71,17 @@ class E2Payment
      * @param array $paymentData
      * @return void
      */
-    public function createPayment(string $orderNUmber, array $paymentData = []): void
+    public function createPayment(string $orderNumber, array $paymentData = []): void
     {
         $this->paymentData = array_merge($paymentData, $this->paymentData);
-        $this->orderNUmber = $orderNUmber;
+        $this->orderNumber = $orderNumber;
 
-        $this->paymentData['ORDER_NUMBER'] = $orderNUmber;
+        $this->paymentData['ORDER_NUMBER'] = $orderNumber;
 
-        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
-        $this->paymentData['MSG_SETTLEMENT_PAYER'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
-        $this->paymentData['MSG_SETTLEMENT_MERCHANT'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
-        $this->paymentData['MSG_UI_PAYMENT_METHOD'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNUmber;
+        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
+        $this->paymentData['MSG_SETTLEMENT_PAYER'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
+        $this->paymentData['MSG_SETTLEMENT_MERCHANT'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
+        $this->paymentData['MSG_UI_PAYMENT_METHOD'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
 
         $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
         $this->paymentData['REFERENCE_NUMBER'] = $this->paymentData['REFERENCE_NUMBER'] ?? null;
@@ -113,7 +115,7 @@ class E2Payment
     public function addAmount(float $amount): void
     {
         if (!empty($this->products)) {
-            throw new \Exception('Either Amount of Product must be added, not both');
+            throw new ProductException('Either Amount of Product must be added, not both');
         }
 
         $this->amount = $amount;
@@ -131,7 +133,7 @@ class E2Payment
     public function addProducts(array $products): void
     {
         if ($this->amount) {
-            throw new \Exception('Either Amount of Product must be added, not both');
+            throw new ProductException('Either Amount of Product must be added, not both');
         }
 
         $this->products = $products;
@@ -159,7 +161,7 @@ class E2Payment
      * @param string $formId
      * @return string
      */
-    public function getPaymentForm(string $buttonText = 'Pay here', string $formId = Form::DEFAULT_FORM_ID): string
+    public function getPaymentForm(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID): string
     {
         $this->validator->validatePaymentData($this->paymentData);
 
@@ -176,7 +178,7 @@ class E2Payment
      * @param string|null $widgetUrl
      * @return string
      */
-    public function getPaymentWidget(string $buttonText = 'Pay here', string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
+    public function getPaymentWidget(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
     {
         $this->validator->validatePaymentData($this->paymentData);
 

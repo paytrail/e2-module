@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Paytrail\E2Module;
 
+use Paytrail\Exceptions\ValidationException;
+
 /**
  * Validator class for validating outgoing and incoming payment data.
  *
@@ -21,20 +23,20 @@ class Validator
     }
 
     /**
-     * Make sure payment has order number and either price or at least one product. Throw an exception if either one is missing.
+     * Make sure payment has order number and either price or at least one product. Throws ValidationException if either one is missing.
      *
      * @param array $paymentData
      * @return void
-     * @throws \Exception
+     * @throws ValidationException
      */
     public function validatePaymentData(array $paymentData): void
     {
         if (!isset($paymentData['ORDER_NUMBER'])) {
-            throw new \Exception('No payment created.');
+            throw new ValidationException('No payment created.');
         }
 
         if (!isset($paymentData['AMOUNT']) && !isset($paymentData['ITEM_TITLE[0]'])) {
-            throw new \Exception('Either amount of at least one product must be added.');
+            throw new ValidationException('Either amount of at least one product must be added.');
         }
     }
 
@@ -65,7 +67,7 @@ class Validator
     }
 
     /**
-     * Calculate expected return auhtcode.
+     * Calculate expected return authcode.
      *
      * @param array $returnParameters
      * @return string

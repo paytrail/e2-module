@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Paytrail\E2Module;
 
+use Paytrail\Exceptions\ProductException;
+
 /**
  * Product class for holding product details for payment.
  *
@@ -24,8 +26,19 @@ class Product
     public $ITEM_DISCOUNT_PERCENT;
     public $ITEM_ID;
 
+    /**
+     * Create new product
+     *
+     * @param array $productData
+     * @return void
+     * @throws  ProductException
+     */
     public static function create(array $productData)
     {
+        if (!isset($productData['ITEM_TITLE']) || !isset($productData['ITEM_UNIT_PRICE'])) {
+            throw new ProductException('ITEM_TITLE and ITEM_UNIT_PRICE are mandatory');
+        }
+
         $product = new Self();
         $product->ITEM_TITLE = $productData['ITEM_TITLE'];
         $product->ITEM_UNIT_PRICE = $productData['ITEM_UNIT_PRICE'];

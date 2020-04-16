@@ -1,0 +1,14 @@
+<form action="<?php echo $paymentUrl; ?>" id="<?php echo $formId; ?>">
+    <?php foreach ($paymentData as $key => $value) : ?>
+        <input name="<?php echo $key; ?>" type="hidden" value="<?php echo $value; ?>">
+    <?php endforeach; ?>
+    <input type="submit" value="<?php echo $buttonText; ?>">
+</form>
+
+<script type="text/javascript" src="<?php echo $widgetUrl; ?>">
+</script>
+<script type="text/javascript">
+    SV.widget.initWithForm('<?php echo $formId; ?>', {
+        charset: 'UTF-8'
+    });
+</script>";

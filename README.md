@@ -58,14 +58,14 @@ $paymentData = [
 
 $e2Payment->createPayment($orderNumber, $paymentData);
 
-$product = product::create([
+$product = Product::create([
     'ITEM_TITLE' => 'Test Product',
     'ITEM_ID' => '1234',
     'ITEM_UNIT_PRICE' => 50,
     'ITEM_QUANTITY' => 2,
     'ITEM_DISCOUNT_PERCENT' => 10,
 ]);
-$shipping = product::create([
+$shipping = Product::create([
     'ITEM_TITLE' => 'Shipping',
     'ITEM_ID' => '001',
     'ITEM_UNIT_PRICE' => 5,
@@ -97,7 +97,7 @@ To get status of payment, paid or not.
 $isPaid = $e2Payment->isPaid($_GET);
 ```
 
-#### Validating payment from notification
+### Validating payment from notification
 If customer doesn't return back after payment, status can be verified from capturing payment data from notify url.
 Return authcode validation is similar than success and cancelled payment, but you also need determine payment status.
 

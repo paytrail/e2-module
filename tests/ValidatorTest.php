@@ -34,7 +34,7 @@ class ValidatorTest extends TestCase
         $this->assertTrue($this->validator->returnAuthcodeIsValid($urlData));
     }
 
-    public function testExceptionIsThrownWhenMissingReturnParameter()
+    public function testReturnAuthcodeIsInvalidWhenMissingParameter()
     {
         $urlData = [
             'ORDER_NUMBER' => 'Order-123',
@@ -51,7 +51,7 @@ class ValidatorTest extends TestCase
         $this->assertStringContainsString('CURRENCY', $this->validator->getErrors()[0]);
     }
 
-    public function testExceptionIsThrownOnInvalidReturnAuthCode()
+    public function testReturnAuthcodeIsInvalidWhitWrongAuthcode()
     {
         $urlData = [
             'ORDER_NUMBER' => 'Order-123',
