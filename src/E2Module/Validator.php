@@ -9,15 +9,17 @@ use Paytrail\Exceptions\ValidationException;
 /**
  * Validator class for validating outgoing and incoming payment data.
  *
+ * @package e2-module
+ * @author Paytrail <tech@paytrail.com>
  */
 class Validator
 {
     private $errors = [];
-    private $merchant;
+    private $merchantSecret;
 
-    public function __construct(Merchant $merchant)
+    public function __construct(string $merchantSecret)
     {
-        $this->merchant = $merchant;
+        $this->merchantSecret = $merchantSecret;
     }
 
     /**
@@ -30,11 +32,11 @@ class Validator
     public function validatePaymentData(array $paymentData): void
     {
         if (!isset($paymentData['ORDER_NUMBER'])) {
-            throw new ValidationException('ORDER_NUMBER is missing.');
+            throw new ValidationException('No payment created.');
         }
 
         if (!isset($paymentData['AMOUNT']) && !isset($paymentData['ITEM_TITLE[0]'])) {
-            throw new ValidationException('Either AMOUNT or at least one product must be added.');
+            throw new ValidationException('Either amount of at least one product must be added.');
         }
     }
 
@@ -53,11 +55,29 @@ class Validator
             }
         }
 
-        if (Authcode::calculateReturnAuthCode($returnParameters, $this->merchant) !== $returnParameters['RETURN_AUTHCODE']) {
+        if ($this->calculateReturnAuthCode($returnParameters) !== $returnParameters['RETURN_AUTHCODE']) {
             $this->errors[] = 'Invalid RETURN_AUTHCODE';
         }
 
-        return empty($this->errors);
+        if (empty($this->errors)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Calculate expected return authcode.
+     *
+     * @param array $returnParameters
+     * @return string
+     */
+    private function calculateReturnAuthCode(array $returnParameters): string
+    {
+        $returnParameters[] = $this->merchantSecret;
+        unset($returnParameters['RETURN_AUTHCODE']);
+
+        return strToUpper(hash('sha256', implode('|', $returnParameters)));
     }
 
     /**
