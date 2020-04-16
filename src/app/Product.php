@@ -39,7 +39,7 @@ class Product
             throw new ProductException('ITEM_TITLE and ITEM_UNIT_PRICE are mandatory');
         }
 
-        $product = new self();
+        $product = new Self();
         $product->ITEM_TITLE = $productData['ITEM_TITLE'];
         $product->ITEM_UNIT_PRICE = $productData['ITEM_UNIT_PRICE'];
         $product->ITEM_QUANTITY = $productData['ITEM_QUANTITY'] ?? 1;
