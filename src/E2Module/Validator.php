@@ -53,7 +53,7 @@ class Validator
             }
         }
 
-        if ($this->calculateReturnAuthCode($returnParameters) !== $returnParameters['RETURN_AUTHCODE']) {
+        if (Authcode::calculateReturnAuthCode($returnParameters, $this->merchant) !== $returnParameters['RETURN_AUTHCODE']) {
             $this->errors[] = 'Invalid RETURN_AUTHCODE';
         }
 
@@ -62,20 +62,6 @@ class Validator
         }
 
         return false;
-    }
-
-    /**
-     * Calculate expected return authcode.
-     *
-     * @param array $returnParameters
-     * @return string
-     */
-    private function calculateReturnAuthCode(array $returnParameters): string
-    {
-        $returnParameters[] = $this->merchant->secret;
-        unset($returnParameters['RETURN_AUTHCODE']);
-
-        return strToUpper(hash('sha256', implode('|', $returnParameters)));
     }
 
     /**
