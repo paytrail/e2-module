@@ -19,11 +19,10 @@ class E2Payment
     const DEFAULT_ALGORITHM = 1;
     const DEFAULT_LOCALE = 'fi_FI';
 
-    const PARAMS_IN = 'MERCHANT_ID,URL_SUCCESS,URL_CANCEL,ORDER_NUMBER,PARAMS_IN,PARAMS_OUT,MSG_UI_MERCHANT_PANEL,URL_NOTIFY,LOCALE,CURRENCY,REFERENCE_NUMBER,PAYMENT_METHODS,ALG';
+    const PARAMS_IN = 'MERCHANT_ID,URL_SUCCESS,URL_CANCEL,ORDER_NUMBER,PARAMS_IN,PARAMS_OUT,MSG_UI_MERCHANT_PANEL,URL_NOTIFY,LOCALE,CURRENCY,PAYMENT_METHODS,ALG';
     const PARAMS_OUT = 'ORDER_NUMBER,PAYMENT_ID,AMOUNT,CURRENCY,PAYMENT_METHOD,TIMESTAMP,STATUS';
 
-    private $merchantId;
-    private $merchantSecret;
+    private $merchant;
 
     private $orderNumber;
     private $products = [];
@@ -31,24 +30,37 @@ class E2Payment
     private $paymentData;
     private $validator;
 
-    public function __construct(string $merchantId, string $merchantSecret)
+    public function __construct(Merchant $merchant)
     {
-        $this->validator = new Validator($merchantSecret);
-
-        $this->merchantId = $merchantId;
-        $this->merchantSecret = $merchantSecret;
+        $this->validator = new Validator($merchant);
+        $this->merchant = $merchant;
 
         $this->paymentData['PARAMS_IN'] = self::PARAMS_IN;
+    }
+
+    private function setPaymentData(array $paymentData): void
+    {
         $this->paymentData['PARAMS_OUT'] = self::PARAMS_OUT;
-        $this->paymentData['MERCHANT_ID'] = $this->merchantId;
+        $this->paymentData['MERCHANT_ID'] = $this->merchant->id;
         $this->paymentData['CURRENCY'] = 'EUR';
         $this->paymentData['ALG'] = self::DEFAULT_ALGORITHM;
+
+        $this->paymentData = array_merge($paymentData, $this->paymentData);
+
+        $this->paymentData['ORDER_NUMBER'] = $this->orderNumber;
+
+        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
+        $this->paymentData['MSG_SETTLEMENT_PAYER'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
+        $this->paymentData['MSG_UI_PAYMENT_METHOD'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
+
+        $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
+        $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
 
         $this->setDefaultUrls();
     }
 
     /**
-     * Get default return urls by appending current url with success, cancel or notify suffix.
+     * Set default return urls by appending current url with success, cancel or notify suffix.
      *
      * @return void
      */
@@ -73,19 +85,8 @@ class E2Payment
      */
     public function createPayment(string $orderNumber, array $paymentData = []): void
     {
-        $this->paymentData = array_merge($paymentData, $this->paymentData);
         $this->orderNumber = $orderNumber;
-
-        $this->paymentData['ORDER_NUMBER'] = $orderNumber;
-
-        $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
-        $this->paymentData['MSG_SETTLEMENT_PAYER'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
-        $this->paymentData['MSG_SETTLEMENT_MERCHANT'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
-        $this->paymentData['MSG_UI_PAYMENT_METHOD'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
-
-        $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
-        $this->paymentData['REFERENCE_NUMBER'] = $this->paymentData['REFERENCE_NUMBER'] ?? null;
-        $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
+        $this->setPaymentData($paymentData);
     }
 
     /**
@@ -194,7 +195,7 @@ class E2Payment
      */
     private function calculateAuthCode(): string
     {
-        $hashData = [$this->merchantSecret];
+        $hashData = [$this->merchant->secret];
         $hashParams = explode(',', $this->paymentData['PARAMS_IN']);
 
         foreach ($hashParams as $parameter) {
@@ -225,6 +226,12 @@ class E2Payment
         return $this->validator->getErrors();
     }
 
+    /**
+     * Determine if payment was paid after returning from payment.
+     *
+     * @param array $returnParameters
+     * @return boolean
+     */
     public function isPaid(array $returnParameters): bool
     {
         return $returnParameters['STATUS'] === 'PAID';

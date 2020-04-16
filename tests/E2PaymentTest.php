@@ -6,6 +6,7 @@ namespace Tests;
 
 use Paytrail\E2Module\Customer;
 use Paytrail\E2Module\E2Payment;
+use Paytrail\E2Module\Merchant;
 use Paytrail\E2Module\Product;
 use Paytrail\Exceptions\ProductException;
 use Paytrail\Exceptions\ValidationException;
@@ -23,6 +24,8 @@ class E2PaymentTest extends TestCase
         'AUTHCODE',
     ];
 
+    const WIDGET_URL = 'dummyUrl/widget.js';
+
     private $e2Payment;
     private $product;
     private $customer;
@@ -31,7 +34,8 @@ class E2PaymentTest extends TestCase
     {
         parent::setUp();
 
-        $this->e2Payment = new E2Payment('13466', '6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ');
+        $merchant = Merchant::create('13466', '6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ');
+        $this->e2Payment = new E2Payment($merchant);
         $this->product = Product::create([
             'ITEM_TITLE' => 'Foo',
             'ITEM_ID' => '001',
@@ -110,13 +114,11 @@ class E2PaymentTest extends TestCase
 
     public function testWidgetIsCreated()
     {
-        $dummyUrl = 'dummyUrl/widget.js';
-
         $this->e2Payment->addProducts([$this->product]);
         $this->e2Payment->addCustomer($this->customer);
         $this->e2Payment->createPayment('order-123');
 
-        $formData = $this->e2Payment->getPaymentWidget('Pay here', 'thisIsFormId', $dummyUrl);
+        $formData = $this->e2Payment->getPaymentWidget('Pay here', 'thisIsFormId', self::WIDGET_URL);
 
         $this->assertNotEmpty($formData);
 
@@ -126,6 +128,6 @@ class E2PaymentTest extends TestCase
 
         $this->assertStringContainsString('<input name="ITEM_TITLE[0]"', $formData);
 
-        $this->assertStringContainsString($dummyUrl, $formData);
+        $this->assertStringContainsString(self::WIDGET_URL, $formData);
     }
 }

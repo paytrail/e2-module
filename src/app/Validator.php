@@ -9,17 +9,15 @@ use Paytrail\Exceptions\ValidationException;
 /**
  * Validator class for validating outgoing and incoming payment data.
  *
- * @package e2-module
- * @author Paytrail <tech@paytrail.com>
  */
 class Validator
 {
     private $errors = [];
-    private $merchantSecret;
+    private $merchant;
 
-    public function __construct(string $merchantSecret)
+    public function __construct(Merchant $merchant)
     {
-        $this->merchantSecret = $merchantSecret;
+        $this->merchant = $merchant;
     }
 
     /**
@@ -74,7 +72,7 @@ class Validator
      */
     private function calculateReturnAuthCode(array $returnParameters): string
     {
-        $returnParameters[] = $this->merchantSecret;
+        $returnParameters[] = $this->merchant->secret;
         unset($returnParameters['RETURN_AUTHCODE']);
 
         return strToUpper(hash('sha256', implode('|', $returnParameters)));

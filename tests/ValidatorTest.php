@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Paytrail\E2Module\Merchant;
 use Paytrail\E2Module\Validator;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +16,8 @@ class ValidatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->validator = new Validator('6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ');
+        $merchant = Merchant::create('13466', '6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ');
+        $this->validator = new Validator($merchant);
     }
 
     public function testReturnAuthcodeIsValidReturnsTrueWithValidReturnValues()

@@ -14,29 +14,34 @@ Paytrail official documentation can be found in [https://docs.paytrail.com](http
 
 ## Examples
 
-### Payment without customer and production information
+### Payment without customer and product information
 
 ```php
+use Paytrail\E2Module\Merchant;
 use Paytrail\E2Module\E2Payment;
 
-$e2Payment = new E2Payment($merchantNumber, $merchantSecret);
+$merchant = Merchant::create($merchantNumber, $merchantSecret);
+$e2Payment = new E2Payment($merchant);
 $e2Payment->addAmount($orderAmount);
 $e2Payment->createPayment($orderNumber);
 
 echo $e2Payment->getPaymentForm();
 ```
 
-### Payment widget with customer, production information and custom return urls
+### Payment widget with customer, product information and custom return urls
 
-Include customer information, discounted product and custom return urls. Get payment widget instead of providing link to payment page.
+Include customer information, discounted product and custom return urls.
 Payment, customer and product properties can be found from [documentation](https://docs.paytrail.com)
 
 ```php
+use Paytrail\E2Module\Merchant;
 use Paytrail\E2Module\E2Payment;
 use Paytrail\E2Module\Product;
 use Paytrail\E2Module\Customer;
 
-$e2Payment = new E2Payment($merchantNumber, $merchantSecret);
+$merchant = Merchant::create($merchantNumber, $merchantSecret);
+
+$e2Payment = new E2Payment($merchant);
 
 $customer = Customer::create([
     'PAYER_PERSON_FIRSTNAME' => 'Test',

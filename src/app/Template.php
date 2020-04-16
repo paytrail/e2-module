@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Paytrail\E2Module;
 
+use Paytrail\Exceptions\TemplateException;
+
 /**
  * Templating class for including form templates.
  *
@@ -23,6 +25,12 @@ class Template
      */
     public static function render(string $templateName, array $data)
     {
+        $templateFile = __DIR__ . self::TEMPLATE_PATH . basename($templateName) . '.phtml';
+
+        if (!file_exists($templateFile)) {
+            throw new TemplateException("Template for {$templateName} not found");
+        }
+
         foreach ($data as $key => $value) {
             $$key = $value;
         }
@@ -30,7 +38,7 @@ class Template
         $paymentUrl =  E2Payment::PAYMENT_URL;
 
         ob_start();
-        include __DIR__ . self::TEMPLATE_PATH . basename($templateName) . '.phtml';
+        include $templateFile;
         $formData = ob_get_contents();
         ob_end_clean();
 
