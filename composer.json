@@ -1,0 +1,30 @@
+{
+    "name": "paytrail/e2-module",
+    "description": "A PHP package for integrating with Paytrail's E2 interface.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://www.paytrail.com/",
+    "authors": [
+        {
+            "name": "Paytrail",
+            "email": "tech@paytrail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Paytrail\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "phpunit/php-code-coverage": "^7.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-text --coverage-html test-reports/html --coverage-clover test-reports/clover.xml tests --log-junit test-reports/junit.xml"
+    }
+}

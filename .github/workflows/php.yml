@@ -18,8 +18,7 @@ jobs:
       run: composer validate --strict
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
 
-    # Uncomment lines below when tests have been implemented.
-    # - name: Run test suite
-    #   run: composer test
+    - name: Run test suite
+      run: composer test
