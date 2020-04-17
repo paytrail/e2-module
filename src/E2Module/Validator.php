@@ -57,11 +57,7 @@ class Validator
             $this->errors[] = 'Invalid RETURN_AUTHCODE';
         }
 
-        if (empty($this->errors)) {
-            return true;
-        }
-
-        return false;
+        return empty($this->errors);
     }
 
     /**
