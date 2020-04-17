@@ -30,7 +30,7 @@ class Validator
     public function validatePaymentData(array $paymentData): void
     {
         if (!isset($paymentData['ORDER_NUMBER'])) {
-            throw new ValidationException('No payment created.');
+            throw new ValidationException('ORDER_NUMBER is missing.');
         }
 
         if (!isset($paymentData['AMOUNT']) && !isset($paymentData['ITEM_TITLE[0]'])) {
