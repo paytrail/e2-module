@@ -34,7 +34,7 @@ class Validator
         }
 
         if (!isset($paymentData['AMOUNT']) && !isset($paymentData['ITEM_TITLE[0]'])) {
-            throw new ValidationException('Either amount of at least one product must be added.');
+            throw new ValidationException('Either AMOUNT or at least one product must be added.');
         }
     }
 
