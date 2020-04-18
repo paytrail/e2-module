@@ -1,24 +1,41 @@
 name: PHP Test Suite
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  - push
+  - pull_request
 
 jobs:
-  build:
 
+  test:
     runs-on: ubuntu-latest
-
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.2', '7.3', '7.4']
+        experimental: [false]
+        include:
+          - php-version: '8.0'
+            experimental: true
+    
+    name: PHP v${{ matrix.php-version }}
+    
     steps:
-    - uses: actions/checkout@v2
 
-    - name: Validate composer.json and composer.lock
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        coverage: pcov
+
+    - name: Validate Composer Files
       run: composer validate --strict
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader
 
-    - name: Run test suite
-      run: composer test
+    - name: Run Tests
+      run: composer test-coverage
