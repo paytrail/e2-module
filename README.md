@@ -1,18 +1,24 @@
-# e2-module
-Helper for creating payments with Paytrail Form Interface (E2)
+# Paytrail E2 module
+
+[![Latest Stable Version](https://poser.pugx.org/paytrail/e2-module/v/stable)](https://packagist.org/packages/paytrail/e2-module)
+![PHP Test Suite](https://github.com/paytrail/e2-module/workflows/PHP%20Test%20Suite/badge.svg)
+[![Total Downloads](https://poser.pugx.org/paytrail/e2-module/downloads)](https://packagist.org/packages/paytrail/e2-module)
+[![License](https://poser.pugx.org/paytrail/e2-module/license)](https://packagist.org/packages/paytrail/e2-module)
+
+> A PHP client library for creating payments with Paytrail Form Interface (E2).
 
 ## Installation
 Install via composer
 
 ```bash
-composer require Paytrail/e2-module
+composer require paytrail/e2-module
 ```
 
 ## Documentation
 
-Paytrail official documentation can be found in [https://docs.paytrail.com](https://docs.paytrail.com)
+Paytrail official documentation can be found [here][docs].
 
-## Examples
+## Usage
 
 ### Payment without customer and product information
 
@@ -31,7 +37,7 @@ echo $e2Payment->getPaymentForm();
 ### Payment widget with customer, product information and custom return urls
 
 Include customer information, discounted product and custom return urls.
-Payment, customer and product properties can be found from [documentation](https://docs.paytrail.com)
+Payment, customer and product properties can be found from [documentation][docs]
 
 ```php
 use Paytrail\E2Module\Merchant;
@@ -89,7 +95,7 @@ After returning from payment, whether success or cancelled, validate return auth
 $isValidPayment = $e2Payment->returnAuthcodeIsValid($_GET);
 ```
 
-You can also send return parameters as array insted of using `$_GET` superglobal.
+You can also send return parameters as array instead of using `$_GET` superglobal.
 If return code is not valid, you can get validation errors.
 
 ```php
@@ -98,6 +104,7 @@ $errorReasons = $e2Payment->getErrors();
 This return array of all error reasons in return authcode validation.
 
 To get status of payment, paid or not.
+
 ```php
 $isPaid = $e2Payment->isPaid($_GET);
 ```
@@ -115,3 +122,5 @@ if (!$isValidPayment) {
 $isPaid = $e2Payment->isPaid($_GET);
 // Code to handle paid/cancelled status for order.
 ```
+
+[docs]: https://docs.paytrail.com
