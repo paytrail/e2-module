@@ -19,7 +19,8 @@ This makes writing new test cases even more robust.
 See #123, #456
 ```
 
-We use the [**StyleCI**][style] service for checking the code style. Unit and integration tests are run against supported PHP versions and they must pass before merge.
+We use the [**StyleCI**][style] service for checking the code style against the official [**PSR-12**][psr12] standard. Unit and integration tests are run against supported PHP versions and they must pass before merge.
 
 [commits]: https://www.conventionalcommits.org/
 [style]: https://styleci.io/
+[psr12]: https://www.php-fig.org/psr/psr-12/
