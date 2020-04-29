@@ -30,7 +30,7 @@ class Customer
      */
     public static function create(array $customerData): self
     {
-        $customer = new Self();
+        $customer = new self();
         $customer->PAYER_PERSON_FIRSTNAME = $customerData['PAYER_PERSON_FIRSTNAME'] ?? null;
         $customer->PAYER_PERSON_LASTNAME = $customerData['PAYER_PERSON_LASTNAME'] ?? null;
         $customer->PAYER_PERSON_EMAIL = $customerData['PAYER_PERSON_EMAIL'] ?? null;
