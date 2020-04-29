@@ -37,6 +37,7 @@ class Authcode
      * Calculate expected return authcode.
      *
      * @param array $returnParameters
+     * @param  Merchant $merchant
      * @return string
      */
     public static function calculateReturnAuthCode(array $returnParameters, Merchant $merchant): string

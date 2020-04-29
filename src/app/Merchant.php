@@ -15,6 +15,13 @@ class Merchant
     public $id;
     public $secret;
 
+    /**
+     * Create new merchant.
+     *
+     * @param string $merchantId
+     * @param string $merchantSecret
+     * @return self
+     */
     public static function create(string $merchantId, string $merchantSecret): self
     {
         $merchant = new self();

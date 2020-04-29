@@ -22,7 +22,7 @@ class ProductTest extends TestCase
     {
         $this->expectException(ProductException::class);
         Product::create([
-            'Title' => 'Test Product',
+            'ITEM_TITLE' => 'Test Product',
         ]);
     }
 }

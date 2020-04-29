@@ -57,7 +57,7 @@ $customer = Customer::create([
     'PAYER_PERSON_ADDR_POSTAL_CODE' => '100200',
     'PAYER_PERSON_ADDR_TOWN' => 'Helsinki',
     'PAYER_PERSON_ADDR_COUNTRY' => 'FI',
-    'PAYER_PERSON_PHONE' => '040123456' ,
+    'PAYER_PERSON_PHONE' => '040123456',
 ]);
 $e2Payment->addCustomer($customer);
 
@@ -104,6 +104,7 @@ $errorReasons = $e2Payment->getErrors();
 This return array of all error reasons in return authcode validation.
 
 To get status of payment, paid or not.
+
 ```php
 $isPaid = $e2Payment->isPaid($_GET);
 ```

@@ -27,19 +27,19 @@ class Product
     public $ITEM_ID;
 
     /**
-     * Create new product
+     * Create new product.
      *
      * @param array $productData
-     * @return void
+     * @return self
      * @throws  ProductException
      */
-    public static function create(array $productData)
+    public static function create(array $productData): self
     {
         if (!isset($productData['ITEM_TITLE']) || !isset($productData['ITEM_UNIT_PRICE'])) {
             throw new ProductException('ITEM_TITLE and ITEM_UNIT_PRICE are mandatory');
         }
 
-        $product = new Self();
+        $product = new self();
         $product->ITEM_TITLE = $productData['ITEM_TITLE'];
         $product->ITEM_UNIT_PRICE = $productData['ITEM_UNIT_PRICE'];
         $product->ITEM_QUANTITY = $productData['ITEM_QUANTITY'] ?? 1;

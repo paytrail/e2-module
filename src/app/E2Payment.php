@@ -38,6 +38,12 @@ class E2Payment
         $this->paymentData['PARAMS_IN'] = self::PARAMS_IN;
     }
 
+    /**
+     * Set default payment fields.
+     *
+     * @param array $paymentData
+     * @return void
+     */
     private function setPaymentData(array $paymentData): void
     {
         $this->paymentData['PARAMS_OUT'] = self::PARAMS_OUT;
@@ -112,6 +118,7 @@ class E2Payment
      *
      * @param float $amount
      * @return void
+     * @throws ProductException
      */
     public function addAmount(float $amount): void
     {
@@ -130,6 +137,7 @@ class E2Payment
      *
      * @param array $products
      * @return void
+     * @throws ProductException
      */
     public function addProducts(array $products): void
     {
