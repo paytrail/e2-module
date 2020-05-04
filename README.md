@@ -123,4 +123,10 @@ $isPaid = $e2Payment->isPaid($_GET);
 // Code to handle paid/cancelled status for order.
 ```
 
+### Getting payment id
+You should save payment id from payment to order details. This id is used for making refunds, and is always unique. Paytrail customer care can also use payment id to track order in case of any problems. Payment id can be also used to get payment details from Merchant Panel.
+```php
+$paymentId = $_GET['PAYMENT_ID'];
+```
+
 [docs]: https://docs.paytrail.com
