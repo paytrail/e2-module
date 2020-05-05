@@ -51,7 +51,9 @@ class E2Payment
         $this->paymentData['CURRENCY'] = 'EUR';
         $this->paymentData['ALG'] = self::DEFAULT_ALGORITHM;
 
-        $this->paymentData = array_merge($paymentData, $this->paymentData);
+        $this->setDefaultUrls();
+
+        $this->paymentData = array_merge($this->paymentData, $paymentData);
 
         $this->paymentData['ORDER_NUMBER'] = $this->orderNumber;
 
@@ -61,8 +63,6 @@ class E2Payment
 
         $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
         $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
-
-        $this->setDefaultUrls();
     }
 
     /**

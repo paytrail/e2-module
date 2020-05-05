@@ -130,4 +130,29 @@ class E2PaymentTest extends TestCase
 
         $this->assertStringContainsString(self::WIDGET_URL, $formData);
     }
+
+    public function testDefaultReturnUrlsCanBeOverride()
+    {
+        $this->e2Payment->addProducts([$this->product]);
+        $this->e2Payment->addCustomer($this->customer);
+
+        $paymentData = [
+            'URL_SUCCESS' => 'https://url/to/shop/successUrl',
+            'URL_CANCEL' => 'https://url/to/shop/cancelUrl',
+            'URL_NOTIFY' => 'https://url/to/shop/notifyUrl',
+        ];
+
+        $this->e2Payment->createPayment('order-123', $paymentData);
+
+        $formData = $this->e2Payment->getPaymentForm();
+
+
+        foreach (self::REQUIRED_PAYMENT_DATA as $requiredData) {
+            $this->assertStringContainsString($requiredData, $formData);
+        }
+
+        $this->assertStringContainsString('<input name="URL_SUCCESS" type="hidden" value="https://url/to/shop/successUrl">', $formData);
+        $this->assertStringContainsString('<input name="URL_CANCEL" type="hidden" value="https://url/to/shop/cancelUrl">', $formData);
+        $this->assertStringContainsString('<input name="URL_NOTIFY" type="hidden" value="https://url/to/shop/notifyUrl">', $formData);
+    }
 }
