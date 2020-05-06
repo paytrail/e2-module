@@ -57,7 +57,7 @@ $customer = Customer::create([
     'PAYER_PERSON_ADDR_POSTAL_CODE' => '100200',
     'PAYER_PERSON_ADDR_TOWN' => 'Helsinki',
     'PAYER_PERSON_ADDR_COUNTRY' => 'FI',
-    'PAYER_PERSON_PHONE' => '040123456' ,
+    'PAYER_PERSON_PHONE' => '040123456',
 ]);
 $e2Payment->addCustomer($customer);
 
@@ -121,6 +121,12 @@ if (!$isValidPayment) {
 
 $isPaid = $e2Payment->isPaid($_GET);
 // Code to handle paid/cancelled status for order.
+```
+
+### Getting payment id
+You should save payment id from payment to order details. This id is used for making refunds, and is always unique. Paytrail customer care can also use payment id to track order in case of any problems. Payment id can be also used to get payment details from Merchant Panel.
+```php
+$paymentId = $_GET['PAYMENT_ID'];
 ```
 
 [docs]: https://docs.paytrail.com
