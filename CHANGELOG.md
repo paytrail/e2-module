@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## `1.0.2`
+
+### Improvements
+
+* Don't override return URLs with default ones (@Jipsukka, #5)
+* Bump phpunit/phpunit from 8.5.3 to 8.5.4 (#4)
+
 ## `1.0.1`
 
 This is a general maintenance release containing enhancements to library development.
