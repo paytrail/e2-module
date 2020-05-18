@@ -145,6 +145,10 @@ class E2Payment
             throw new ProductException('Either Amount of Product must be added, not both');
         }
 
+        if (count($products) > 500) {
+            throw new ProductException('Paytrail can only handle up to 500 different product rows. Please group products using product amount.');
+        }
+
         $this->products = $products;
 
         $this->paymentData['PARAMS_IN'] .= ',VAT_IS_INCLUDED';
