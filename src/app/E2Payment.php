@@ -141,8 +141,12 @@ class E2Payment
      */
     public function addProducts(array $products): void
     {
-        if ($this->amount) {
+        if ($this->amount !== null) {
             throw new ProductException('Either Amount of Product must be added, not both');
+        }
+
+        if (count($products) > Product::MAXIMUM_PRODUCTS) {
+            throw new ProductException('Paytrail can only handle up to 500 different product rows. Please group products using product amount.');
         }
 
         $this->products = $products;

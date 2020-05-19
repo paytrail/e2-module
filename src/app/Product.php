@@ -18,6 +18,9 @@ class Product
     const TYPE_SHIPMENT_COST = 2;
     const TYPE_HANDLING_COST = 3;
 
+    const DEFAULT_VAT = 24;
+    const MAXIMUM_PRODUCTS = 500;
+
     public $ITEM_TITLE;
     public $ITEM_UNIT_PRICE;
     public $ITEM_QUANTITY;
@@ -44,7 +47,7 @@ class Product
         $product->ITEM_UNIT_PRICE = $productData['ITEM_UNIT_PRICE'];
         $product->ITEM_QUANTITY = $productData['ITEM_QUANTITY'] ?? 1;
         $product->ITEM_TYPE = $productData['ITEM_TYPE'] ?? self::TYPE_NORMAL;
-        $product->ITEM_VAT_PERCENT = $productData['ITEM_VAT_PERCENT'] ?? 24;
+        $product->ITEM_VAT_PERCENT = $productData['ITEM_VAT_PERCENT'] ?? self::DEFAULT_VAT;
         $product->ITEM_DISCOUNT_PERCENT = $productData['ITEM_DISCOUNT_PERCENT'] ?? null;
         $product->ITEM_ID = $productData['ITEM_ID'] ?? null;
 
