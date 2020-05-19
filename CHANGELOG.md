@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## `1.0.3`
+
+### Fixed
+
+* Use `POST` method for sending forms (@Jipsukka, #6)
+
 ## `1.0.2`
 
 ### Improvements
