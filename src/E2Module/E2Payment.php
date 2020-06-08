@@ -42,9 +42,9 @@ class E2Payment
      * Set default payment fields.
      *
      * @param array $paymentData
-     * @return void
+     * @return self
      */
-    private function setPaymentData(array $paymentData): void
+    private function setPaymentData(array $paymentData): self
     {
         $this->paymentData['PARAMS_OUT'] = self::PARAMS_OUT;
         $this->paymentData['MERCHANT_ID'] = $this->merchant->id;
@@ -63,6 +63,8 @@ class E2Payment
 
         $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
         $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
+
+        return $this;
     }
 
     /**
@@ -87,21 +89,23 @@ class E2Payment
      *
      * @param string $orderNUmber
      * @param array $paymentData
-     * @return void
+     * @return self
      */
-    public function createPayment(string $orderNumber, array $paymentData = []): void
+    public function createPayment(string $orderNumber, array $paymentData = []): self
     {
         $this->orderNumber = $orderNumber;
         $this->setPaymentData($paymentData);
+
+        return $this;
     }
 
     /**
      * Add customer to payment.
      *
      * @param Customer $customer
-     * @return void
+     * @return self
      */
-    public function addCustomer(Customer $customer)
+    public function addCustomer(Customer $customer): self
     {
         foreach (get_object_vars($customer) as $key => $value) {
             if ($value === null) {
@@ -111,16 +115,18 @@ class E2Payment
 
             $this->paymentData['PARAMS_IN'] .= ',' . $key;
         }
+
+        return $this;
     }
 
     /**
      * Add payment total amount.
      *
      * @param float $amount
-     * @return void
+     * @return self
      * @throws ProductException
      */
-    public function addAmount(float $amount): void
+    public function addAmount(float $amount): self
     {
         if (!empty($this->products)) {
             throw new ProductException('Either Amount of Product must be added, not both');
@@ -130,16 +136,18 @@ class E2Payment
 
         $this->paymentData['AMOUNT'] = $amount;
         $this->paymentData['PARAMS_IN'] .= ',AMOUNT';
+
+        return $this;
     }
 
     /**
      * Add product details to payment.
      *
      * @param array $products
-     * @return void
+     * @return this
      * @throws ProductException
      */
-    public function addProducts(array $products): void
+    public function addProducts(array $products): self
     {
         if ($this->amount !== null) {
             throw new ProductException('Either Amount of Product must be added, not both');
@@ -165,6 +173,8 @@ class E2Payment
                 $this->paymentData['PARAMS_IN'] .= ',' . $key;
             }
         }
+
+        return $this;
     }
 
     /**
