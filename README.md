@@ -28,10 +28,10 @@ use Paytrail\E2Module\E2Payment;
 
 $merchant = Merchant::create($merchantId, $merchantSecret);
 $e2Payment = new E2Payment($merchant);
-$e2Payment->addAmount($orderAmount);
-$e2Payment->createPayment($orderNumber);
 
-echo $e2Payment->getPaymentForm();
+echo $e2Payment->addAmount($orderAmount)
+    ->createPayment($orderNumber)
+    ->getPaymentForm();
 ```
 
 ### Payment widget with customer, product information and custom return urls
@@ -59,15 +59,12 @@ $customer = Customer::create([
     'PAYER_PERSON_ADDR_COUNTRY' => 'FI',
     'PAYER_PERSON_PHONE' => '040123456',
 ]);
-$e2Payment->addCustomer($customer);
 
 $paymentData = [
     'URL_SUCCESS' => 'https://url/to/shop/successUrl',
     'URL_CANCEL' => 'https://url/to/shop/cancelUrl',
     'URL_NOTIFY' => 'https://url/to/shop/notifyUrl',
 ];
-
-$e2Payment->createPayment($orderNumber, $paymentData);
 
 $product = Product::create([
     'ITEM_TITLE' => 'Test Product',
@@ -82,9 +79,11 @@ $shipping = Product::create([
     'ITEM_UNIT_PRICE' => 5,
     'ITEM_TYPE' => Product::TYPE_SHIPMENT_COST,
 ]);
-$e2Payment->addProducts([$product, $shipping]);
 
-echo $e2Payment->getPaymentWidget();
+echo $e2Payment->addCustomer($customer)
+    ->createPayment($orderNumber, $paymentData)
+    ->addProducts([$product, $shipping])
+    ->getPaymentWidget();
 ```
 
 ### Validating completed payment
