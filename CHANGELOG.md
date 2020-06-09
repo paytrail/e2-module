@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## `1.0.4`
+
+### Fixed
+
+* Rename app folder accordingly to to match PSR-4 standard (@Jipsukka, #9)
+
+### Dependencies
+
+* Update PHPUnit (#7)
+
 ## `1.0.3`
 
 ### Fixed
