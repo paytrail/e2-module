@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## `1.0.5`
+
+### Fixed
+
+* Fix template path case (@Astyk #14)
+
 ## `1.0.4`
 
 ### Fixed
