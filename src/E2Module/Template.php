@@ -36,7 +36,7 @@ class Template
             $$key = $value;
         }
 
-        $paymentUrl =  E2Payment::PAYMENT_URL;
+        $paymentUrl =  E2Payment::getPaymentUrl();
 
         ob_start();
         include $templateFile;

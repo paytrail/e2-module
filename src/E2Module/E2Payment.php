@@ -30,6 +30,8 @@ class E2Payment
     private $paymentData;
     private $validator;
 
+    private static $paymentUrl = self::PAYMENT_URL;
+
     public function __construct(Merchant $merchant)
     {
         $this->validator = new Validator($merchant);
@@ -238,5 +240,27 @@ class E2Payment
     public function isPaid(array $returnParameters): bool
     {
         return $returnParameters['STATUS'] === 'PAID';
+    }
+
+    /**
+     * Get Paytrail payment URL.
+     *
+     * @return string
+     */
+    public static function getPaymentUrl(): string
+    {
+        return self::$paymentUrl;
+    }
+
+    /**
+     * Set Payment URL.
+     *
+     * @param string $paymentUrl
+     * @return void
+     * @internal This function is used only in internal test
+     */
+    public static function setPaymentUlr(string $paymentUrl): void
+    {
+        self::$paymentUrl = $paymentUrl;
     }
 }
