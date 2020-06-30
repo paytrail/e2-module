@@ -155,4 +155,11 @@ class E2PaymentTest extends TestCase
         $this->assertStringContainsString('<input name="URL_CANCEL" type="hidden" value="https://url/to/shop/cancelUrl">', $formData);
         $this->assertStringContainsString('<input name="URL_NOTIFY" type="hidden" value="https://url/to/shop/notifyUrl">', $formData);
     }
+
+    public function testPaymentUrlCanBeChanged()
+    {
+        $this->assertSame(E2Payment::DEFAULT_PAYMENT_URL, E2Payment::getPaymentUrl());
+        E2Payment::setPaymentUrl('FooBar');
+        $this->assertSame('FooBar', E2Payment::getPaymentUrl());
+    }
 }

@@ -1,6 +1,0 @@
-<form method="POST" action=" <?php echo $paymentUrl; ?>" id="<?php echo $formId; ?>">
-    <?php foreach ($paymentData as $key => $value) : ?>
-        <input name="<?php echo $key; ?>" type="hidden" value="<?php echo $value; ?>">
-    <?php endforeach; ?>
-    <input type="submit" value="<?php echo $buttonText; ?>">
-</form>
