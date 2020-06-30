@@ -60,8 +60,8 @@ class E2Payment
         $this->paymentData['ORDER_NUMBER'] = $this->orderNumber;
 
         $this->paymentData['MSG_UI_MERCHANT_PANEL'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
-        $this->paymentData['MSG_SETTLEMENT_PAYER'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
-        $this->paymentData['MSG_UI_PAYMENT_METHOD'] = $this->paymentData['MSG_UI_MERCHANT_PANEL'] ?? $this->orderNumber;
+        $this->paymentData['MSG_SETTLEMENT_PAYER'] = $this->paymentData['MSG_SETTLEMENT_PAYER'] ?? $this->orderNumber;
+        $this->paymentData['MSG_UI_PAYMENT_METHOD'] = $this->paymentData['MSG_UI_PAYMENT_METHOD'] ?? $this->orderNumber;
 
         $this->paymentData['LOCALE'] = $this->paymentData['LOCALE'] ?? self::DEFAULT_LOCALE;
         $this->paymentData['PAYMENT_METHODS'] = $this->paymentData['PAYMENT_METHODS'] ?? null;
