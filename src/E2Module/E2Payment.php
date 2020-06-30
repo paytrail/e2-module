@@ -14,7 +14,7 @@ use Paytrail\Exceptions\ProductException;
  */
 class E2Payment
 {
-    const PAYMENT_URL = 'https://payment.paytrail.com/e2';
+    const DEFAULT_PAYMENT_URL = 'https://payment.paytrail.com/e2';
 
     const DEFAULT_ALGORITHM = 1;
     const DEFAULT_LOCALE = 'fi_FI';
@@ -30,7 +30,7 @@ class E2Payment
     private $paymentData;
     private $validator;
 
-    private static $paymentUrl = self::PAYMENT_URL;
+    private static $paymentUrl = self::DEFAULT_PAYMENT_URL;
 
     public function __construct(Merchant $merchant)
     {
@@ -259,7 +259,7 @@ class E2Payment
      * @return void
      * @internal This function is used only in internal test
      */
-    public static function setPaymentUlr(string $paymentUrl): void
+    public static function setPaymentUrl(string $paymentUrl): void
     {
         self::$paymentUrl = $paymentUrl;
     }
