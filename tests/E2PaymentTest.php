@@ -158,8 +158,8 @@ class E2PaymentTest extends TestCase
 
     public function testPaymentUrlCanBeChanged()
     {
-        $this->assertSame(E2Payment::PAYMENT_URL, E2Payment::getPaymentUrl());
-        E2Payment::setPaymentUlr('FooBar');
+        $this->assertSame(E2Payment::DEFAULT_PAYMENT_URL, E2Payment::getPaymentUrl());
+        E2Payment::setPaymentUrl('FooBar');
         $this->assertSame('FooBar', E2Payment::getPaymentUrl());
     }
 }
