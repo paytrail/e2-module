@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## `1.1.0`
+
+### Improvements
+* Allow payment URL to be changed for internal testing (@Jipsukka, #15)
+
+### Fixed
+
+* Use correct payment data keys for messages (@Jipsukka, #15)
 
 ## `1.0.5`
 
