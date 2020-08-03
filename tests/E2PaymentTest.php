@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Paytrail\Tests;
 
 use Paytrail\E2Module\Customer;
 use Paytrail\E2Module\E2Payment;
@@ -145,7 +145,6 @@ class E2PaymentTest extends TestCase
         $this->e2Payment->createPayment('order-123', $paymentData);
 
         $formData = $this->e2Payment->getPaymentForm();
-
 
         foreach (self::REQUIRED_PAYMENT_DATA as $requiredData) {
             $this->assertStringContainsString($requiredData, $formData);
