@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class E2PaymentTest extends TestCase
 {
-    const REQUIRED_PAYMENT_DATA = [
+    private const REQUIRED_PAYMENT_DATA = [
         'MERCHANT_ID',
         'URL_SUCCESS',
         'URL_CANCEL',
@@ -24,7 +24,7 @@ class E2PaymentTest extends TestCase
         'AUTHCODE',
     ];
 
-    const WIDGET_URL = 'dummyUrl/widget.js';
+    private const WIDGET_URL = 'dummyUrl/widget.js';
 
     private $e2Payment;
     private $product;
