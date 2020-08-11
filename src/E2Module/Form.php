@@ -12,9 +12,9 @@ namespace Paytrail\E2Module;
  */
 class Form
 {
-    const DEFAULT_FORM_ID = 'PaytrailPaymentForm';
-    const WIDGET_URL = 'https://payment.paytrail.com/js/payment-widget-v1.0.min.js';
-    const BUTTON_DEFAULT_TEXT = 'Pay here';
+    public const DEFAULT_FORM_ID = 'PaytrailPaymentForm';
+    public const WIDGET_URL = 'https://payment.paytrail.com/js/payment-widget-v1.0.min.js';
+    public const BUTTON_DEFAULT_TEXT = 'Pay here';
 
     /**
      * Create Paytrail payment form with widget.

@@ -14,12 +14,12 @@ use Paytrail\Exceptions\ProductException;
  */
 class Product
 {
-    const TYPE_NORMAL = 1;
-    const TYPE_SHIPMENT_COST = 2;
-    const TYPE_HANDLING_COST = 3;
+    public const TYPE_NORMAL = 1;
+    public const TYPE_SHIPMENT_COST = 2;
+    public const TYPE_HANDLING_COST = 3;
 
-    const DEFAULT_VAT = 24;
-    const MAXIMUM_PRODUCTS = 500;
+    public const DEFAULT_VAT = 24;
+    public const MAXIMUM_PRODUCTS = 500;
 
     public $ITEM_TITLE;
     public $ITEM_UNIT_PRICE;

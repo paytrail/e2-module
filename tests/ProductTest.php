@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Paytrail\Tests;
 
 use Paytrail\E2Module\Product;
 use Paytrail\Exceptions\ProductException;
