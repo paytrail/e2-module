@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## `1.1.1`
+
+### Improvements
+* Allow item titles to have double quotes (@Jipsukka, #17)
+
 ## `1.1.0`
 
 ### Improvements
