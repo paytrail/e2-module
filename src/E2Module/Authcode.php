@@ -42,9 +42,16 @@ class Authcode
      */
     public static function calculateReturnAuthCode(array $returnParameters, Merchant $merchant): string
     {
-        $returnParameters[] = $merchant->secret;
+        $authcodeParameters = [];
+        $expectedUrlParams = explode(',', E2Payment::PARAMS_OUT);
+
+        foreach ($expectedUrlParams as $parameter) {
+            $authcodeParameters[] = ($returnParameters[$parameter] ?? null);
+        }
+
+        $authcodeParameters[] = $merchant->secret;
         unset($returnParameters['RETURN_AUTHCODE']);
 
-        return strToUpper(hash('sha256', implode('|', $returnParameters)));
+        return strToUpper(hash('sha256', implode('|', $authcodeParameters)));
     }
 }
