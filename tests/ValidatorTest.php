@@ -49,7 +49,7 @@ class ValidatorTest extends TestCase
         ];
 
         $this->assertFalse($this->validator->returnAuthcodeIsValid($urlData));
-        $this->assertCount(1, $this->validator->getErrors());
+        $this->assertCount(2, $this->validator->getErrors());
         $this->assertStringContainsString('CURRENCY', $this->validator->getErrors()[0]);
     }
 
@@ -69,5 +69,22 @@ class ValidatorTest extends TestCase
         $this->assertFalse($this->validator->returnAuthcodeIsValid($urlData));
         $this->assertCount(1, $this->validator->getErrors());
         $this->assertStringContainsString('RETURN_AUTHCODE', $this->validator->getErrors()[0]);
+    }
+
+    public function testReturnAuthcodeIsValidReturnsTrueWithExtraParameters()
+    {
+        $urlData = [
+            'ORDER_NUMBER' => 'Order-123',
+            'PAYMENT_ID' => '109056237731',
+            'AMOUNT' => '95.00',
+            'CURRENCY' => 'EUR',
+            'PAYMENT_METHOD' => '1',
+            'TIMESTAMP' => '1586411733',
+            'STATUS' => 'PAID',
+            'RETURN_AUTHCODE' => '1CBCBC693DB07D0F0528C681F8C4B9FD974371588CDA1219D49911EB5D1CA53D',
+            'FOO' => 'BAR',
+        ];
+
+        $this->assertTrue($this->validator->returnAuthcodeIsValid($urlData));
     }
 }
