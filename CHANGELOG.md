@@ -2,9 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## `1.1.2`
+
+### Fixed
+* Calculate return authcode only from expected parameters (@Jipsukka, #19)
+
 ## `1.1.1`
 
-### Improvements
+### Fixed
 * Allow item titles to have double quotes (@Jipsukka, #17)
 
 ## `1.1.0`
