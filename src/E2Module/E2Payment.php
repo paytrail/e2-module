@@ -188,7 +188,7 @@ class E2Payment
      */
     public function getPaymentForm(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID): string
     {
-        return Form::createPaymentForm($this->toArray(), $buttonText, $formId);
+        return Form::createPaymentForm($this->getPaymentData(), $buttonText, $formId);
     }
 
     /**
@@ -201,7 +201,7 @@ class E2Payment
      */
     public function getPaymentWidget(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
     {
-        return Form::createPaymentWidget($this->toArray(), $buttonText, $formId, $widgetUrl);
+        return Form::createPaymentWidget($this->getPaymentData(), $buttonText, $formId, $widgetUrl);
     }
 
     /**
@@ -209,7 +209,7 @@ class E2Payment
      *
      * @return array
      */
-    public function toArray(): array
+    public function getPaymentData(): array
     {
         $this->validator->validatePaymentData($this->paymentData);
         $this->paymentData['AUTHCODE'] = Authcode::calculateAuthCode($this->paymentData, $this->merchant);

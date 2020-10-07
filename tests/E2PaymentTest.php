@@ -137,7 +137,7 @@ class E2PaymentTest extends TestCase
         $this->e2Payment->addCustomer($this->customer);
         $this->e2Payment->createPayment('order-123');
 
-        $data = $this->e2Payment->toArray();
+        $data = $this->e2Payment->getPaymentData();
 
         $this->assertNotEmpty($data);
 
