@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## `1.2.0`
+
+### Feature
+Add getPaymentData() method to allow custom forms (@tuutti #22)
+
 ## `1.1.2`
 
 ### Fixed
