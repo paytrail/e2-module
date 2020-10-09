@@ -188,10 +188,7 @@ class E2Payment
      */
     public function getPaymentForm(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID): string
     {
-        $this->validator->validatePaymentData($this->paymentData);
-        $this->paymentData['AUTHCODE'] = Authcode::calculateAuthCode($this->paymentData, $this->merchant);
-
-        return Form::createPaymentForm($this->paymentData, $buttonText, $formId);
+        return Form::createPaymentForm($this->getPaymentData(), $buttonText, $formId);
     }
 
     /**
@@ -204,10 +201,20 @@ class E2Payment
      */
     public function getPaymentWidget(string $buttonText = Form::BUTTON_DEFAULT_TEXT, string $formId = Form::DEFAULT_FORM_ID, ?string $widgetUrl = null): string
     {
+        return Form::createPaymentWidget($this->getPaymentData(), $buttonText, $formId, $widgetUrl);
+    }
+
+    /**
+     * Get Paytrail payment data as array.
+     *
+     * @return array
+     */
+    public function getPaymentData(): array
+    {
         $this->validator->validatePaymentData($this->paymentData);
         $this->paymentData['AUTHCODE'] = Authcode::calculateAuthCode($this->paymentData, $this->merchant);
 
-        return Form::createPaymentWidget($this->paymentData, $buttonText, $formId, $widgetUrl);
+        return $this->paymentData;
     }
 
     /**

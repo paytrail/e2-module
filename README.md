@@ -86,6 +86,27 @@ echo $e2Payment->addCustomer($customer)
     ->getPaymentWidget();
 ```
 
+### Rendering a custom payment form
+
+```php
+use Paytrail\E2Module\Merchant;
+use Paytrail\E2Module\E2Payment;
+
+$merchant = Merchant::create($merchantId, $merchantSecret);
+$e2Payment = new E2Payment($merchant);
+
+$fields = $e2Payment->addAmount($orderAmount)
+    ->createPayment($orderNumber)
+    ->getPaymentData();
+
+foreach ($fields as $name => $value) {
+    // Your form logic should generate a hidden input field:
+    // <input type="hidden" name="$name", value="$value">
+}
+```
+
+Set form action to `$e2Payment->getPaymentUrl();`.
+
 ### Validating completed payment
 
 After returning from payment, whether success or cancelled, validate return authcode. Same validation applies to notify url.

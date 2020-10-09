@@ -131,6 +131,22 @@ class E2PaymentTest extends TestCase
         $this->assertStringContainsString(self::WIDGET_URL, $formData);
     }
 
+    public function testToArray()
+    {
+        $this->e2Payment->addProducts([$this->product]);
+        $this->e2Payment->addCustomer($this->customer);
+        $this->e2Payment->createPayment('order-123');
+
+        $data = $this->e2Payment->getPaymentData();
+
+        $this->assertNotEmpty($data);
+
+        foreach (self::REQUIRED_PAYMENT_DATA as $requiredData) {
+            $this->assertNotEmpty($data[$requiredData]);
+        }
+        $this->assertNotEmpty($data['ITEM_TITLE[0]']);
+    }
+
     public function testDefaultReturnUrlsCanBeOverride()
     {
         $this->e2Payment->addProducts([$this->product]);
