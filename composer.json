@@ -33,7 +33,7 @@
             "@composer dump-autoload -o",
             "vendor/bin/phpunit"
         ],
-        "test-coverage": "@test --coverage-text --coverage-html test-reports/html"
+        "test-coverage": "vendor/bin/phpunit --coverage-text --coverage-html test-reports/html"
     },
     "prefer-stable": true
 }
