@@ -5,34 +5,38 @@ on:
   - pull_request
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.3', '7.4', 8.0]
+        php-version: ['7.3', '7.4', '8.0']
         experimental: [false]
-    
+
     name: PHP v${{ matrix.php-version }}
-    
+
     steps:
 
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Setup
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-version }}
-        coverage: pcov
+      - name: Setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: pcov
 
-    - name: Validate Composer Files
-      run: composer validate --strict
+      - name: Validate Composer Files
+        run: composer validate --strict
 
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader
 
-    - name: Run Tests
-      run: composer test-coverage
+      - name: Run Tests
+        run: composer test-coverage
+
+      - name: PHP Security Checker
+        uses: StephaneBour/actions-php-security-checker@1.1
+        with:
+          composer-lock: './composer.lock'
