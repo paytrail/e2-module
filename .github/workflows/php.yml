@@ -1,8 +1,14 @@
-name: PHP Test Suite
+name: PHP Workflow
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * 1'
 
 jobs:
   test:
